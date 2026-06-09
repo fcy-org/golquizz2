@@ -6,14 +6,13 @@ import OptionButton from "./OptionButton";
 import QuizButton from "./QuizButton";
 import QuizInput from "./QuizInput";
 import WaveDecoration from "./WaveDecoration";
-import logo from "../assets/logo-garra-white.png";
-import { MUNICIPIOS_PIAUI } from "@/data/municipiosPiaui";
+import logo from "../assets/logo-gol.webp";
 
 declare function fbq(...args: unknown[]): void;
 
 const TOTAL_STEPS = 9;
-const WEBHOOK_URL = "/api/webhooks/leads/cmpy5fztd000348rojo6xn9f5";
-const WHATSAPP_NUMBER = "558699870988";
+const WEBHOOK_URL = "/api/webhooks/leads/cmq0tkyiw0003dnk3jtdpcj6i";
+const WHATSAPP_NUMBER = "5511999999999";
 
 const slideVariants = {
   enter: { x: 60, opacity: 0 },
@@ -27,42 +26,14 @@ type Answers = {
   investimentoMercadoria: string;
   estoqueParado: string;
   areaMelhorar: string;
-  faturamento: string;
-  dor: string;
-  desempenho: string;
   produtos: string[];
-  mediaFaturamento: string;
-  compraDistribuidora: string;
   estado: string;
   cidade: string;
-  nomeFarmacia: string;
   nomeUsuario: string;
-  usaRedes: string;
-  redesSociais: string;
   nomeCompleto: string;
-  email: string;
-  cnpj: string;
   telefone: string;
 };
 
-function validarCNPJ(cnpj: string): boolean {
-  const s = cnpj.replace(/\D/g, "");
-  if (s.length !== 14) return false;
-  if (/^(\d)\1+$/.test(s)) return false;
-
-  const calc = (len: number) => {
-    let sum = 0;
-    let w = len - 7;
-    for (let i = 0; i < len; i++) {
-      sum += parseInt(s[i], 10) * w--;
-      if (w < 2) w = 9;
-    }
-    const r = sum % 11;
-    return r < 2 ? 0 : 11 - r;
-  };
-
-  return calc(12) === parseInt(s[12], 10) && calc(13) === parseInt(s[13], 10);
-}
 
 function getUTMs() {
   const p = new URLSearchParams(window.location.search);
@@ -110,7 +81,6 @@ function getTrackingParams() {
 async function sendWebhookLead(answers: Answers) {
   const leadName = answers.nomeCompleto || answers.nomeUsuario || "Lead";
   const normalizedPhone = answers.telefone.replace(/\D/g, "");
-  const normalizedCnpj = answers.cnpj.replace(/\D/g, "");
   const fbclid = getFbclid();
   const tracking = getTrackingParams();
 
@@ -121,13 +91,11 @@ async function sendWebhookLead(answers: Answers) {
       body: JSON.stringify({
         phone: normalizedPhone,
         name: leadName,
-        email: answers.email,
-        document: normalizedCnpj,
         city: answers.cidade,
-        state: "PI",
-        pipeline_stage: "Diagnóstico Quiz Garra",
+        state: answers.estado,
+        pipeline_stage: "Diagnóstico Quiz Gol",
         notes: [
-          `Tipo de estabelecimento: ${answers.tipoLoja || "Não informado"}`,
+          `Tipo de loja: ${answers.tipoLoja || "Não informado"}`,
           `Investimento mensal em mercadoria: ${answers.investimentoMercadoria || "Não informado"}`,
           `Produto parado no estoque: ${answers.estoqueParado || "Não informado"}`,
           `Área que quer melhorar: ${answers.areaMelhorar || "Não informado"}`,
@@ -169,14 +137,14 @@ function trackQuizStep(step: number) {
     }
 
     fbq("trackCustom", "QuizStepView", {
-      quiz_name: "garra_distribuidora_diagnostico",
+      quiz_name: "gol_distribuidora_diagnostico",
       step_number: step,
       step_name: `etapa-${step}`,
       step_url: `${window.location.pathname}${window.location.search}#etapa-${step}`,
     });
 
     fbq("trackCustom", `Quiz_Etapa_${step}`, {
-      quiz_name: "garra_distribuidora_diagnostico",
+      quiz_name: "gol_distribuidora_diagnostico",
       step_number: step,
     });
   } catch (error) {
@@ -201,67 +169,71 @@ function getDiagnosisInsights(answers: Answers, name: string): DiagnosisInsight[
   if (answers.estoqueParado === "Muito") {
     insights.push({
       icon: "⚠️",
-      title: "Estoque parado travando lucro",
-      text: `${name}, seu ${loja.toLowerCase()} pode estar com capital preso em produtos de baixo giro. Reorganizar o mix de doces, snacks e produtos de impulso ajuda a liberar caixa e abrir espaço para itens que vendem todos os dias.`,
+      title: "Estoque parado travando margem",
+      text: `${name}, sua ${loja.toLowerCase()} pode estar com capital preso em modelos de baixo giro. Revisar o mix com foco em categorias Olinda de alta aceitação regional ajuda a liberar caixa e abrir espaço para pares que vendem mais rápido.`,
       highlight: true,
     });
   } else if (answers.estoqueParado === "Um pouco") {
     insights.push({
       icon: "📦",
-      title: "Oportunidade escondida no estoque",
-      text: `${name}, existe sinal de estoque parado, mas ainda há espaço para corrigir rápido. O diagnóstico aponta onde ajustar as compras para melhorar giro, ticket e margem no seu estabelecimento.`,
+      title: "Oportunidade de margem no estoque",
+      text: `${name}, há sinal de estoque parado, mas ainda dá para corrigir rápido. Ajustar o mix para categorias com maior giro regional pode melhorar a rentabilidade sem precisar aumentar volume de compras.`,
       highlight: true,
     });
   } else {
     insights.push({
       icon: "📈",
-      title: "Base saudável para crescer",
-      text: `${name}, se quase não há produto parado, o próximo passo é fortalecer as categorias de impulso que aumentam o ticket médio sem pesar o estoque.`,
+      title: "Base sólida para crescer",
+      text: `${name}, com pouco produto parado, o próximo passo é usar esse capital de giro para fortalecer as categorias que aumentam o ticket médio por par vendido.`,
       highlight: true,
     });
   }
 
   // Insight 2: categoria de maior oportunidade
   const catMsg: Record<string, { title: string; text: string }> = {
-    "Balas e chicletes": {
-      title: "Balas e chicletes: o maior giro do checkout",
-      text: "Balas e chicletes têm alta taxa de recompra e saída diária. Um mix bem abastecido no checkout evita ruptura e garante venda sem esforço de exposição.",
+    "Feminino": {
+      title: "Feminino: maior volume e fidelização",
+      text: "A categoria feminina concentra o maior volume de vendas em lojas de calçados do Nordeste. Um mix variado da Linha Olinda com boa aceitação regional garante recompra frequente.",
     },
-    "Pirulitos e mastigáveis": {
-      title: "Pirulitos e mastigáveis: impulso garantido",
-      text: "Produtos mastigáveis têm forte apelo infantil e de impulso. Posicioná-los bem perto do caixa pode aumentar o ticket médio em cada compra.",
+    "Masculino": {
+      title: "Masculino: conforto que vende sozinho",
+      text: "Calçados masculinos com foco em conforto e praticidade têm alta aceitação no varejo regional. Posicionar bem essa categoria reduz negociação de preço com o cliente.",
     },
-    "Chocolates e snacks": {
-      title: "Chocolates e snacks: margem acima da média",
-      text: "Chocolates e snacks têm margem superior à maioria das categorias de impulso. Uma boa variedade de marcas Dori pode elevar o faturamento sem aumentar o volume de pedidos.",
+    "Infantil": {
+      title: "Infantil: venda recorrente que fideliza a família",
+      text: "A linha infantil tem recompra garantida — criança cresce e o cliente volta. Uma família fidelizada na categoria infantil tende a comprar em outras categorias da mesma loja.",
     },
-    "Produtos infantis Dori": {
-      title: "Produtos infantis: fidelização pelo público certo",
-      text: "A linha infantil Dori tem alta fidelização — crianças pedem pelo produto e adultos repetem a compra. Manter o mix atualizado transforma essa categoria em receita recorrente.",
+    "Baby": {
+      title: "Baby: margem diferenciada e público especial",
+      text: "Calçados baby têm percepção de valor mais alta e margem diferenciada. É uma categoria de presente frequente, com compra emocional e menor resistência a preço.",
+    },
+    "Licenciados": {
+      title: "Licenciados: o cliente já quer antes de ver o preço",
+      text: "Personagens licenciados eliminam a comparação de preço — o cliente quer aquele produto específico. Isso aumenta a margem e reduz o esforço de venda.",
     },
   };
 
   const destaque = answers.produtos.find((p) => catMsg[p]);
   if (destaque) {
-    insights.push({ icon: "🍬", ...catMsg[destaque] });
+    insights.push({ icon: "👟", ...catMsg[destaque] });
   }
 
   const areaMsg: Record<string, { title: string; text: string }> = {
     "Giro de produtos": {
-      title: "Produtos que deveriam girar mais",
-      text: "A prioridade é identificar quais doces e snacks vendem mais rápido na sua região e reduzir compras que deixam dinheiro parado na prateleira.",
+      title: "Pares que deveriam girar mais",
+      text: "A prioridade é identificar quais categorias têm maior saída na sua região e reduzir compras de modelos que ficam parados na prateleira consumindo capital.",
     },
     "Ticket médio": {
-      title: "Ticket médio com produtos de impulso",
-      text: "Doces, snacks e itens de impulso Dori podem elevar o valor de cada compra sem depender de promoções agressivas.",
+      title: "Ticket médio com o mix certo",
+      text: "Combinar categorias como licenciados, feminino e infantil pode elevar o valor médio de cada venda sem depender de desconto para fechar o pedido.",
     },
     "Mix de categorias": {
-      title: "Mix mais inteligente por categoria",
-      text: "Um mix equilibrado de balas, chocolates e snacks evita excesso de produtos parecidos e fortalece as categorias com maior recompra e margem.",
+      title: "Mix mais rentável por metro de prateleira",
+      text: "Um mix equilibrado da Linha Olinda evita excesso de modelos parecidos e fortalece as categorias com maior margem e recompra na sua região.",
     },
     "Margem de lucro": {
-      title: "Margem com compra mais estratégica",
-      text: "Ajustar o mix de impulso ajuda seu estabelecimento a vender produtos com melhor retorno, não apenas itens que ocupam espaço no estoque.",
+      title: "Mais margem por par vendido",
+      text: "Trabalhar com distribuição exclusiva reduz a concorrência direta e permite sustentar uma margem maior sem perder vendas para o mesmo produto no concorrente.",
     },
   };
 
@@ -280,21 +252,11 @@ const Quiz = () => {
     investimentoMercadoria: "",
     estoqueParado: "",
     areaMelhorar: "",
-    faturamento: "",
-    dor: "",
-    desempenho: "",
     produtos: [],
-    mediaFaturamento: "",
-    compraDistribuidora: "",
     estado: "",
     cidade: "",
-    nomeFarmacia: "",
     nomeUsuario: "",
-    usaRedes: "",
-    redesSociais: "",
     nomeCompleto: "",
-    email: "",
-    cnpj: "",
     telefone: "",
   });
   const [isSubmittingLead, setIsSubmittingLead] = useState(false);
@@ -318,10 +280,10 @@ const Quiz = () => {
     }
 
     const textSteps = [
-      "Analisando seu perfil de compra...",
-      "Comparando com padrões de mercados da sua região...",
-      "Identificando oportunidades escondidas no seu mix...",
-      "Finalizando seu diagnóstico de giro inteligente...",
+      "Analisando seu perfil de loja...",
+      "Comparando com padrões de lojas da sua região...",
+      "Identificando oportunidades de margem no seu mix...",
+      "Finalizando seu diagnóstico de rentabilidade...",
     ];
 
     setDiagnosisProgress(0);
@@ -404,12 +366,11 @@ const Quiz = () => {
     const leadName = getLeadName();
     const phone = WHATSAPP_NUMBER;
     const msg = encodeURIComponent(
-      `Olá! Fiz o diagnóstico no site e gostaria de falar com um especialista.\n\n` +
+      `Olá! Fiz o diagnóstico no site e gostaria de falar com um consultor.\n\n` +
         `Nome: ${leadName}\n` +
         `Telefone: ${answers.telefone}\n` +
-        `CNPJ: ${answers.cnpj}\n` +
-        `Tipo de estabelecimento: ${answers.tipoLoja}\n` +
-        `Cidade: ${answers.cidade} / PI\n` +
+        `Tipo de loja: ${answers.tipoLoja}\n` +
+        `Cidade: ${answers.cidade} / ${answers.estado}\n` +
         `Investimento mensal: ${answers.investimentoMercadoria}\n` +
         `Estoque parado: ${answers.estoqueParado}\n` +
         `Área que quer melhorar: ${answers.areaMelhorar}`
@@ -455,23 +416,21 @@ const Quiz = () => {
       case 1:
         return (
           <div className="flex flex-col items-center text-center gap-6 py-8">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <TrendingUp className="w-8 h-8 text-primary" />
-            </div>
+            <img src={logo} alt="Gol Distribuidora" className="h-24 w-auto" />
 
             <h1 className="text-2xl md:text-3xl font-extrabold text-foreground leading-tight">
-              Seu estoque pode estar travando{" "}
-              <span className="text-primary">o lucro da sua loja</span>
+              Sua loja está vendendo ou{" "}
+              <span className="text-primary">lucrando de verdade?</span>
             </h1>
 
             <p className="text-muted-foreground text-base md:text-lg max-w-md">
-              Descubra em 2 minutos quais doces, snacks e produtos de impulso
-              podem destravar o giro do seu estabelecimento.
+              Descubra em 2 minutos como a Linha Olinda pode aumentar a margem
+              da sua loja sem precisar vender mais pares.
             </p>
 
             <p className="text-primary font-semibold text-sm md:text-base max-w-md">
-              +120 estabelecimentos no Piauí já aplicaram esse diagnóstico.
-              Frete grátis para o Piauí.
+              Distribuição exclusiva Gol — atendemos PI, MA, TO e CE.
+              Frete grátis nas regiões atendidas.
             </p>
 
             <div className="w-full mt-4">
@@ -486,13 +445,13 @@ const Quiz = () => {
         return (
           <QuestionScreen
             emoji="🏪"
-            question="Qual tipo de estabelecimento você tem?"
+            question="Qual tipo de loja você tem?"
           >
             {[
-              "Mercado / Mercadinho",
-              "Supermercado",
-              "Conveniência",
-              "Padaria",
+              "Loja de calçados",
+              "Bazar / Loja de variedades",
+              "Mercadinho / Mercearia",
+              "Loja multimarcas",
               "Outro",
             ].map((opt) => (
               <OptionButton
@@ -610,15 +569,16 @@ const Quiz = () => {
       case 6:
         return (
           <QuestionScreen
-            emoji="🍬"
-            question="Quais categorias de doces, snacks e bomboniere você mais trabalha?"
+            emoji="👟"
+            question="Quais categorias de calçados você mais trabalha?"
             subtitle="(Pode selecionar mais de uma opção)"
           >
             {[
-              "Balas e chicletes",
-              "Pirulitos e mastigáveis",
-              "Chocolates e snacks",
-              "Produtos infantis Dori",
+              "Feminino",
+              "Masculino",
+              "Infantil",
+              "Baby",
+              "Licenciados",
             ].map((opt) => (
               <OptionButton
                 key={opt}
@@ -735,39 +695,30 @@ const Quiz = () => {
                 placeholder="WhatsApp (00) 00000-0000"
                 mask="phone"
               />
-              <QuizInput
-                value={answers.email}
-                onChange={(v) => setAnswer("email", v.trim().toLowerCase())}
-                placeholder="E-mail"
-                type="email"
-              />
-              {answers.email && !isValidEmail(answers.email) && (
-                <p className="text-sm text-destructive -mt-1">
-                  Informe um e-mail válido.
-                </p>
-              )}
-              <select
-                value={answers.cidade}
-                onChange={(e) => setAnswer("cidade", e.target.value)}
-                className="w-full p-4 rounded-lg border-2 border-border bg-card text-foreground font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-              >
-                <option value="" disabled>Cidade (Piauí)</option>
-                {MUNICIPIOS_PIAUI.map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
-              <QuizInput
-                value={answers.cnpj}
-                onChange={(v) => setAnswer("cnpj", v)}
-                placeholder="CNPJ 00.000.000/0000-00"
-                mask="cnpj"
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <select
+                  value={answers.estado}
+                  onChange={(e) => setAnswer("estado", e.target.value)}
+                  className="w-full p-4 rounded-lg border-2 border-border bg-card text-foreground font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                >
+                  <option value="" disabled>Estado</option>
+                  <option value="PI">Piauí (PI)</option>
+                  <option value="MA">Maranhão (MA)</option>
+                  <option value="TO">Tocantins (TO)</option>
+                  <option value="CE">Ceará (CE)</option>
+                </select>
+                <QuizInput
+                  value={answers.cidade}
+                  onChange={(v) => setAnswer("cidade", v)}
+                  placeholder="Cidade"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-semibold text-primary text-center">
-              <span className="rounded-lg bg-primary/10 px-3 py-2">Frete grátis no PI</span>
-              <span className="rounded-lg bg-primary/10 px-3 py-2">Atendimento especialista</span>
-              <span className="rounded-lg bg-primary/10 px-3 py-2">Sugestão personalizada</span>
+              <span className="rounded-lg bg-primary/10 px-3 py-2">Frete grátis PI/MA/TO/CE</span>
+              <span className="rounded-lg bg-primary/10 px-3 py-2">Distribuição exclusiva</span>
+              <span className="rounded-lg bg-primary/10 px-3 py-2">Mix Linha Olinda</span>
             </div>
 
             <QuizButton
@@ -786,10 +737,10 @@ const Quiz = () => {
                 next();
               }}
               disabled={
+                !answers.nomeCompleto.trim() ||
                 answers.telefone.length < 14 ||
-                !isValidEmail(answers.email) ||
-                !validarCNPJ(answers.cnpj) ||
-                !answers.cidade
+                !answers.estado ||
+                !answers.cidade.trim()
               }
               variant="cta"
             >
@@ -883,25 +834,27 @@ const Quiz = () => {
     <div className="min-h-screen bg-background flex flex-col relative overflow-x-hidden">
       <WaveDecoration />
 
-      <div className="w-full bg-primary px-6 flex items-center justify-between relative shadow-md" style={{ height: "96px" }}>
-        <div className="w-[60px] flex justify-start">
-          {step > 1 && step < 7 && (
-            <button
-              onClick={prev}
-              className="text-primary-foreground text-sm font-medium"
-              type="button"
-            >
-              ← Voltar
-            </button>
-          )}
-        </div>
+      {step > 1 && (
+        <div className="w-full bg-white border-b border-border px-6 flex items-center justify-between relative shadow-sm" style={{ height: "72px" }}>
+          <div className="w-[60px] flex justify-start">
+            {step > 1 && step < 7 && (
+              <button
+                onClick={prev}
+                className="text-primary text-sm font-medium"
+                type="button"
+              >
+                ← Voltar
+              </button>
+            )}
+          </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center h-full">
-          <img src={logo} alt="GARRA Distribuidora" className="h-full w-auto py-2" />
-        </div>
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center h-full">
+            <img src={logo} alt="Gol Distribuidora" className="h-12 w-auto py-1" />
+          </div>
 
-        <div className="w-[60px]" />
-      </div>
+          <div className="w-[60px]" />
+        </div>
+      )}
 
       {step > 1 && step < TOTAL_STEPS && (
         <ProgressBar current={step - 1} total={TOTAL_STEPS - 1} />

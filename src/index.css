@@ -7,73 +7,73 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 194 100% 13%;
+    --foreground: 225 35% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 194 100% 13%;
+    --card-foreground: 225 35% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 194 100% 13%;
+    --popover-foreground: 225 35% 18%;
 
-    --primary: 194 72% 33%;
+    --primary: 195 100% 24%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 194 55% 55%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 37 90% 63%;
+    --secondary-foreground: 225 35% 18%;
 
-    --muted: 194 20% 95%;
-    --muted-foreground: 194 30% 40%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 15% 45%;
 
-    --accent: 194 72% 33%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 37 90% 63%;
+    --accent-foreground: 225 35% 18%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 194 20% 88%;
-    --input: 194 20% 88%;
-    --ring: 194 72% 33%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 195 100% 24%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 194 72% 33%;
+    --sidebar-primary: 195 100% 24%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 194 15% 95%;
-    --sidebar-accent-foreground: 194 100% 13%;
-    --sidebar-border: 194 20% 88%;
-    --sidebar-ring: 194 72% 33%;
+    --sidebar-accent: 210 15% 95%;
+    --sidebar-accent-foreground: 225 35% 18%;
+    --sidebar-border: 210 20% 88%;
+    --sidebar-ring: 195 100% 24%;
 
     /* Custom tokens */
-    --rio-blue: 194 72% 33%;
-    --rio-blue-dark: 194 85% 22%;
-    --rio-yellow: 194 55% 55%;
-    --rio-yellow-light: 194 55% 65%;
-    --gradient-hero: linear-gradient(135deg, hsl(194 72% 33%), hsl(194 85% 22%));
-    --gradient-wave: linear-gradient(180deg, hsl(194 72% 33% / 0.05), transparent);
+    --rio-blue: 195 100% 24%;
+    --rio-blue-dark: 195 100% 16%;
+    --rio-yellow: 37 90% 63%;
+    --rio-yellow-light: 37 90% 73%;
+    --gradient-hero: linear-gradient(135deg, hsl(195 100% 24%), hsl(195 100% 16%));
+    --gradient-wave: linear-gradient(180deg, hsl(195 100% 24% / 0.05), transparent);
   }
 
   .dark {
-    --background: 204 100% 8%;
+    --background: 225 35% 8%;
     --foreground: 0 0% 95%;
-    --card: 204 80% 12%;
+    --card: 225 35% 12%;
     --card-foreground: 0 0% 95%;
-    --popover: 204 80% 12%;
+    --popover: 225 35% 12%;
     --popover-foreground: 0 0% 95%;
-    --primary: 200 100% 50%;
+    --primary: 195 100% 35%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 52 96% 49%;
-    --secondary-foreground: 204 100% 8%;
-    --muted: 204 40% 18%;
-    --muted-foreground: 200 15% 65%;
-    --accent: 200 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 37 90% 63%;
+    --secondary-foreground: 225 35% 8%;
+    --muted: 225 20% 18%;
+    --muted-foreground: 210 15% 65%;
+    --accent: 37 90% 63%;
+    --accent-foreground: 225 35% 8%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 204 40% 20%;
-    --input: 204 40% 20%;
-    --ring: 200 100% 50%;
+    --border: 225 20% 22%;
+    --input: 225 20% 22%;
+    --ring: 195 100% 35%;
   }
 }
 
@@ -90,7 +90,7 @@
 
 @layer utilities {
   .wave-decoration {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23177a8f' fill-opacity='0.08' d='M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120'%3E%3Cpath fill='%23005D7B' fill-opacity='0.07' d='M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: 100% 80px;
