@@ -12,7 +12,7 @@ declare function fbq(...args: unknown[]): void;
 
 const TOTAL_STEPS = 9;
 const WEBHOOK_URL = "/api/webhooks/leads/cmq0tkyiw0003dnk3jtdpcj6i";
-const WHATSAPP_NUMBER = "5511999999999";
+const WHATSAPP_NUMBER = "5586999840542";
 
 const slideVariants = {
   enter: { x: 60, opacity: 0 },
