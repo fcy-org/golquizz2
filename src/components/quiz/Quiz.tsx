@@ -472,7 +472,7 @@ const Quiz = () => {
             </p>
 
             <p className="text-primary font-semibold text-sm md:text-base max-w-md">
-              Distribuição exclusiva Gol — atendemos PI, MA, TO e CE.
+              Distribuição exclusiva Gol — atendemos PI e MA.
               Frete grátis nas regiões atendidas.
             </p>
 
@@ -758,8 +758,6 @@ const Quiz = () => {
                   <option value="" disabled>Estado</option>
                   <option value="PI">Piauí (PI)</option>
                   <option value="MA">Maranhão (MA)</option>
-                  <option value="TO">Tocantins (TO)</option>
-                  <option value="CE">Ceará (CE)</option>
                 </select>
                 <QuizInput
                   value={answers.cidade}
@@ -770,7 +768,7 @@ const Quiz = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-semibold text-primary text-center">
-              <span className="rounded-lg bg-primary/10 px-3 py-2">Frete grátis PI/MA/TO/CE</span>
+              <span className="rounded-lg bg-primary/10 px-3 py-2">Frete grátis PI/MA</span>
               <span className="rounded-lg bg-primary/10 px-3 py-2">Distribuição exclusiva</span>
               <span className="rounded-lg bg-primary/10 px-3 py-2">Mix Linha Olinda</span>
             </div>
